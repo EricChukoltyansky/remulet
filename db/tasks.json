@@ -1,7 +1,17 @@
 [
   {
-    "id": "40954e75-fada-4c8b-b94f-a3b28a80c29c",
+    "id": "4233c0af-9c2b-480a-830f-a2c24e3bbe90",
     "title": "Buy milk",
+    "completed": true
+  },
+  {
+    "id": "6da795cf-3b51-491f-b382-5a8ada86aded",
+    "title": "Buy eggs",
+    "completed": false
+  },
+  {
+    "id": "11c2d0b8-b60d-40fd-ab7b-3d8f9916be97",
+    "title": "Buy bread",
     "completed": false
   }
 ]
