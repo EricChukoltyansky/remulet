@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { remult } from "./common";
 import { Task } from "./shared/Task";
 import "./App.css";
+import { ErrorInfo } from "remult";
 
 const taskRepo = remult.repo(Task);
 
@@ -14,7 +15,9 @@ async function fetchTasks(hideCompleted: boolean) {
 }
 
 function App() {
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const [tasks, setTasks] = useState<(Task & { error?: ErrorInfo<Task> })[]>(
+    []
+  );
   const [hideCompleted, setHideCompleted] = useState(false);
 
   useEffect(() => {
@@ -23,6 +26,13 @@ function App() {
 
   const addTask = () => {
     setTasks([...tasks, new Task()]);
+  };
+
+  const setAll = async (completed: boolean) => {
+    for (const task of await taskRepo.find()) {
+      await taskRepo.save({ ...task, completed });
+    }
+    setTasks(await fetchTasks(hideCompleted));
   };
   return (
     <div>
@@ -39,8 +49,20 @@ function App() {
         };
 
         const saveTask = async () => {
-          const savedTask = await taskRepo.save(task);
-          setTasks(tasks.map((t) => (t === task ? savedTask : t)));
+          try {
+            const savedTask = await taskRepo.save(task);
+            setTasks(tasks.map((t) => (t === task ? savedTask : t)));
+          } catch (e: any | unknown) {
+            alert(e.message);
+            setTasks(
+              tasks.map((t) => (t === task ? { ...task, error: e } : t))
+            );
+          }
+        };
+
+        const deleteTask = async () => {
+          await taskRepo.delete(task);
+          setTasks(tasks.filter((t) => t !== task));
         };
 
         return (
@@ -54,11 +76,17 @@ function App() {
               value={task.title}
               onChange={(e) => handleChange({ title: e.target.value })}
             />
+            {task?.error?.modelState?.title}
             <button onClick={saveTask}>Save</button>
+            <button onClick={deleteTask}>Delete</button>
           </div>
         );
       })}
       <button onClick={addTask}>Add Task</button>
+      <div>
+        <button onClick={() => setAll(true)}>Set all as completed</button>
+        <button onClick={() => setAll(false)}>Set all as uncompleted</button>
+      </div>
     </div>
   );
 }

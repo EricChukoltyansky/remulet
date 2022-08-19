@@ -7,11 +7,11 @@
   {
     "id": "6da795cf-3b51-491f-b382-5a8ada86aded",
     "title": "Buy eggs",
-    "completed": false
+    "completed": true
   },
   {
     "id": "11c2d0b8-b60d-40fd-ab7b-3d8f9916be97",
     "title": "Buy bread",
-    "completed": false
+    "completed": true
   }
 ]
