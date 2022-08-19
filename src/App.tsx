@@ -3,6 +3,7 @@ import { remult } from "./common";
 import { Task } from "./shared/Task";
 import "./App.css";
 import { ErrorInfo } from "remult";
+import { TasksController } from "./shared/TasksController";
 
 const taskRepo = remult.repo(Task);
 
@@ -29,9 +30,7 @@ function App() {
   };
 
   const setAll = async (completed: boolean) => {
-    for (const task of await taskRepo.find()) {
-      await taskRepo.save({ ...task, completed });
-    }
+    await TasksController.setAll(completed);
     setTasks(await fetchTasks(hideCompleted));
   };
   return (
